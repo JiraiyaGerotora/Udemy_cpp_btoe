@@ -1,33 +1,60 @@
 #include <string>
 #include <iostream>
+#include "library.h"
+#include "book.h"
+#include "user.h"
 
-struct book
-{
-    std::string title;
-    std::string author;
-    int year;
-};
-
-void setBook (book * bk)
-{
-    std::cout << "Enter book title: "; //Shouldn't use cin >> (*bk).title; it won't take spaces
-    std::getline(std::cin, (*bk).title); // bk->title is same as (*bk).title; bk being a pointer
-    std::cout << "Enter book author: ";
-    std::getline(std::cin, (*bk).author);
-    std::cout << "Enter book published year: ";
-    std::cin >> (*bk).year;
-}
-
-void showBook (book * bk)
-{
-    std::cout << "Book title: " << bk->title << "\n";
-    std::cout << "Book author: " << bk->author << "\n";
-    std::cout << "Book published year: " << bk->year << "\n";
-}
 
 int main (int argc, char * argv[])
 {
-    book bk;
-    setBook(&bk);
-    showBook(&bk);
+    const Book book1("To kill a Mockingbird", "Harper Lee", 1960);
+    const Book book2("When Breath Becomes Air", "Paul Kalanithi", 2016);
+    const Book book3("The Remains of the Day", "Kazuo Ishiguro", 1989);
+    const Book book4 = book3;
+    const Book book5 = book3;
+    const Book book6 = book3;
+
+    Library library(5);
+    Librarian librarian("Jeffrey", "Archer", 5);
+    Borrower borrower("Adams", "Lara", 5);
+
+    library.libraryAddBook(book1);
+    library.libraryAddBook(book2);
+    library.libraryAddBook(book3);
+    library.libraryAddBook(book4);
+    library.libraryAddBook(book5);
+    library.libraryAddBook(book6);
+
+    int index;
+    char choice;
+    while(true)
+    {
+        library.libraryShowBooks();
+        borrower.brwrShowBooks();
+        std::cout << "Would you like to Borrow - B/b or Return - R/r: ";
+        std::cin >> choice;
+        switch(choice)
+        {
+            case 'b':
+            case 'B':
+            {
+                std::cout << "Which book would you like to rent, POSITION IN LIBRARY: ";
+                std::cin >> index;
+                librarian.librarianLendBook(library, borrower, index);
+                break;
+            }
+            case 'r':
+            case 'R':
+            {
+                std::cout << "Which book would you like to return, POSITION IN USER: ";
+                std::cin >> index;
+                borrower.brwrReturnBook(library, index);
+                break;
+            }
+            default:
+                std::cout << "Wrong choice!\n";
+        }
+        system("clear");
+    }
+    return 0;
 }
